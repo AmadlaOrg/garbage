@@ -7,6 +7,7 @@ import (
 	"github.com/AmadlaOrg/garbage/db"
 	"github.com/AmadlaOrg/garbage/trash"
 	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/tw"
 	"github.com/spf13/cobra"
 )
 
@@ -66,10 +67,13 @@ func runList(cmd *cobra.Command, args []string) error {
 	}
 
 	out.Result(items, func(w io.Writer) {
-		table := tablewriter.NewWriter(w)
-		table.SetHeader([]string{"ID", "Name", "Type", "Original Path", "Size", "Trashed At"})
-		table.SetBorder(false)
-		table.SetAutoWrapText(false)
+		table := tablewriter.NewTable(w,
+			tablewriter.WithRowAutoWrap(tw.WrapNone),
+			tablewriter.WithRendition(tw.Rendition{
+				Borders: tw.Border{Left: tw.Off, Right: tw.Off, Top: tw.Off, Bottom: tw.Off},
+			}),
+		)
+		table.Header([]string{"ID", "Name", "Type", "Original Path", "Size", "Trashed At"})
 
 		for _, item := range items {
 			table.Append([]string{
